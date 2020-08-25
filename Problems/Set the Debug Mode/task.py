@@ -1,0 +1,2 @@
+IS_RELEASE_SERVER = input() == 'true'
+DEBUG = not IS_RELEASE_SERVER
