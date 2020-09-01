@@ -34,3 +34,22 @@ class NewsView(View):
         news = [n for n in news_from_json if n['link'] == link_nr][0]
         context = {'created': news['created'], 'text': news['text'], 'title': news['title']}
         return render(request, 'news/news.html', context=context)
+
+class NewsCreate(View):
+    def post(self, request, *args, **kwargs):
+        # news_json_path = os.path.join(settings.BASE_DIR, '../', settings.NEWS_JSON_PATH)
+        news_json_path = settings.NEWS_JSON_PATH
+        with open(news_json_path, 'r') as news_json_file:
+            news_feed = json.load(news_json_file)
+            last_link = max([item['link'] for item in news_feed])
+        with open(news_json_path, 'w') as news_json_file:
+            news_item = {
+                'created': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                'text': request.POST.get('text'),
+                'title': request.POST.get('title'),
+                'link': last_link + 1
+            }
+            news_feed.append(news_item)
+            json.dump(news_feed, news_json_file)
+        return redirect('/news/')
+    return render(request, 'news_form.html')
