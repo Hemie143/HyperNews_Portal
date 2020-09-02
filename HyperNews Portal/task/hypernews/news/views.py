@@ -36,6 +36,9 @@ class NewsView(View):
         return render(request, 'news/news.html', context=context)
 
 class NewsCreate(View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'news/create_form.html')
+
     def post(self, request, *args, **kwargs):
         # news_json_path = os.path.join(settings.BASE_DIR, '../', settings.NEWS_JSON_PATH)
         news_json_path = settings.NEWS_JSON_PATH
@@ -52,4 +55,4 @@ class NewsCreate(View):
             news_feed.append(news_item)
             json.dump(news_feed, news_json_file)
         return redirect('/news/')
-    return render(request, 'news_form.html')
+
