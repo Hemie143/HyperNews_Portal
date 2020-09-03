@@ -1,10 +1,11 @@
 from django.http import HttpResponse
 from django.views import View
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 import json
 import datetime
+
 
 class MainPageView(View):
     def get(self, request, *args, **kwargs):
@@ -35,12 +36,12 @@ class NewsView(View):
         context = {'created': news['created'], 'text': news['text'], 'title': news['title']}
         return render(request, 'news/news.html', context=context)
 
+
 class NewsCreate(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'news/create_form.html')
 
     def post(self, request, *args, **kwargs):
-        # news_json_path = os.path.join(settings.BASE_DIR, '../', settings.NEWS_JSON_PATH)
         news_json_path = settings.NEWS_JSON_PATH
         with open(news_json_path, 'r') as news_json_file:
             news_feed = json.load(news_json_file)
