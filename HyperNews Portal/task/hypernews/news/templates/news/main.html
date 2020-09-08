@@ -14,5 +14,13 @@
         </ul>
     {% endfor %}
     <a target="_blank" href="/news/create/">Create</a>
+    <br>
+
+    <form action="/news/" method="get">
+        {% csrf_token %}
+        <label for="q">Search:</label>
+        <input id="q" type="text" name="q">
+        <input type="submit" value="Search">
+    </form>
 </body>
 </html>

@@ -9,8 +9,7 @@ import datetime
 
 class MainPageView(View):
     def get(self, request, *args, **kwargs):
-        html = 'Coming soon'
-        return HttpResponse(html)
+        return redirect('/news/')
 
 
 class NewsAllView(View):
@@ -19,12 +18,18 @@ class NewsAllView(View):
             news_from_json = json.load(news_file)
         print(news_from_json)
         news = {}
-        dates = sorted(set([n['created'][:10] for n in news_from_json]), reverse=True)
-        for d in dates:
-            news[d] = []
         for n in sorted(news_from_json, key=lambda item: item['created'], reverse=True):
+            keyword = request.GET.get('q')
             d = n['created'][:10]
-            news[d].append(dict(link=n['link'], title=n['title']))
+            if keyword:
+                if keyword in n['title']:
+                    if d not in news:
+                        news[d] = []
+                    news[d].append(dict(link=n['link'], title=n['title']))
+            else:
+                if d not in news:
+                    news[d] = []
+                news[d].append(dict(link=n['link'], title=n['title']))
         return render(request, 'news/main.html', dict(newslist=news))
 
 
@@ -56,4 +61,3 @@ class NewsCreate(View):
             news_feed.append(news_item)
             json.dump(news_feed, news_json_file)
         return redirect('/news/')
-
